@@ -1,0 +1,23 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import BlogPost from "../../layouts/BlogPost.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+const post = Astro.props;
+const { Content } = await post.render(); //converts html--->tagged content to original content without styles
+---
+
+<div class="flex flex-col gap-10 items-center justify-center">
+  <h1 class="text-4xl font-medium">{post.data.title}</h1>
+  <img class="size-81" src={post.data.heroImage} />
+  <div class="prose prose-md prose-headings:font-mono prose-a:text-red-700 prose-p:text-xl font-sans"
+  >
+    <Content />
+  </div>
+</div>
